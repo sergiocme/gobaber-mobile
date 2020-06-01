@@ -11,7 +11,7 @@ const RouterContainer: React.FC = () => {
     <Router.Navigator
       screenOptions={{
         headerShown: false,
-        cardStyle: { backgroundColor: '#321e38' },
+        cardStyle: { backgroundColor: '#312e38' },
       }}
     >
       <Router.Screen name="SignIn" component={SignIn} />
