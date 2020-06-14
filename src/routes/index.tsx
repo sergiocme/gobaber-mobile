@@ -13,7 +13,6 @@ const RouterContainer: React.FC = () => {
         headerShown: false,
         cardStyle: { backgroundColor: '#312e38' },
       }}
-      initialRouteName="SignUp"
     >
       <Router.Screen name="SignIn" component={SignIn} />
       <Router.Screen name="SignUp" component={SignUp} />
