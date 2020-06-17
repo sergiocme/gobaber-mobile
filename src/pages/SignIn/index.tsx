@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
 import {
   Image,
   KeyboardAvoidingView,
@@ -6,6 +6,8 @@ import {
   View,
   ScrollView,
 } from 'react-native';
+import { FormHandles } from '@unform/core';
+import { Form } from '@unform/mobile';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
@@ -24,7 +26,13 @@ import {
 import logoImg from '../../assets/logo.png';
 
 const SignIn: React.FC = () => {
+  const formRef = useRef<FormHandles>(null);
   const navigation = useNavigation();
+
+  const handleSignIn = useCallback((data: object) => {
+    console.log('data: ', data);
+  }, []);
+
   return (
     <>
       <KeyboardAvoidingView
@@ -42,12 +50,18 @@ const SignIn: React.FC = () => {
               <Title>SignIn</Title>
             </View>
 
-            <Input name="email" icon="mail" placeholder="Email" />
-            <Input name="password" icon="lock" placeholder="Password" />
+            <Form
+              ref={formRef}
+              onSubmit={handleSignIn}
+              style={{ width: '100%' }}
+            >
+              <Input name="email" icon="mail" placeholder="Email" />
+              <Input name="password" icon="lock" placeholder="Password" />
 
-            <Button>Login</Button>
+              <Button onPress={() => { formRef.current?.submitForm() }}>Login</Button>
+            </Form>
 
-            <ForgotPassword onPress={() => {}}>
+            <ForgotPassword>
               <ForgotPasswordText>Forgot password?</ForgotPasswordText>
             </ForgotPassword>
           </Container>
