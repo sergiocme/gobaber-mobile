@@ -1,0 +1,13 @@
+{
+  "editor.rulers": [80, 120],
+  "[typescript]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+    },
+  },
+  "[typescriptreact]": {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true,
+    },
+  },
+}
