@@ -6,12 +6,15 @@ import {
   View,
   ScrollView,
   TextInput,
+  Alert,
 } from 'react-native';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
+import * as Yup from 'yup';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
+import getValidationErrors from '../../utils/getValidationErrors';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -19,15 +22,40 @@ import { Container, Title, BackToSignIn, BackToSignInText } from './styles';
 
 import logoImg from '../../assets/logo.png';
 
+interface SignUpFormData {
+  name: string;
+  email: string;
+  password: string;
+}
+
 const SignUp: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const emailInputRef = useRef<TextInput>(null);
   const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
-  const handleSingUp = useCallback((data: object) => {
-    console.log('data: ', data);
-  }, []);
+  const handleSignUp = useCallback(
+    async ({ name, email, password }: SignUpFormData) => {
+      formRef.current?.setErrors({});
+      try {
+        const schema = Yup.object().shape({
+          name: Yup.string().required('Name is required'),
+          email: Yup.string().required('Email is required'),
+          password: Yup.string().required('Password is required'),
+        });
+
+        await schema.validate({ name, email, password }, { abortEarly: false });
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error);
+          formRef.current?.setErrors(errors);
+        } else {
+          Alert.alert('Register Error', 'Unable to register, try again later');
+        }
+      }
+    },
+    [],
+  );
 
   return (
     <>
@@ -48,7 +76,7 @@ const SignUp: React.FC = () => {
 
             <Form
               ref={formRef}
-              onSubmit={handleSingUp}
+              onSubmit={handleSignUp}
               style={{ width: '100%' }}
             >
               <Input
