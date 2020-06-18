@@ -6,12 +6,15 @@ import {
   View,
   ScrollView,
   TextInput,
+  Alert,
 } from 'react-native';
+import * as Yup from 'yup';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
+import getValidationErrors from '../../utils/getValidationErrors';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
@@ -26,14 +29,37 @@ import {
 
 import logoImg from '../../assets/logo.png';
 
+interface SignInFormData {
+  email: string;
+  password: string;
+}
+
 const SignIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
   const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
-  const handleSignIn = useCallback((data: object) => {
-    console.log('data: ', data);
-  }, []);
+  const handleSignIn = useCallback(
+    async ({ email, password }: SignInFormData) => {
+      formRef.current?.setErrors({});
+      try {
+        const schema = Yup.object().shape({
+          email: Yup.string().required('Email is required'),
+          password: Yup.string().required('Password is required'),
+        });
+
+        await schema.validate({ email, password }, { abortEarly: false });
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error);
+          formRef.current?.setErrors(errors);
+        } else {
+          Alert.alert('Authentication Error', 'Invalid email or password');
+        }
+      }
+    },
+    [],
+  );
 
   return (
     <>
