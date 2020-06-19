@@ -20,6 +20,7 @@ interface SignInParams {
 
 interface AuthContextData {
   data: AuthState;
+  loading: boolean;
   signIn(credentials: SignInParams): Promise<void>;
   signOut(): void;
 }
@@ -38,6 +39,7 @@ const useAuth = (): AuthContextData => {
 
 const AuthProvider: React.FC = ({ children }) => {
   const [data, setData] = useState<AuthState>({} as AuthState);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadStoragedData(): Promise<void> {
@@ -49,9 +51,10 @@ const AuthProvider: React.FC = ({ children }) => {
       if (token[1] && user[1]) {
         setData({ token: token[1], user: JSON.parse(user[1]) });
       }
+      setLoading(false);
     }
     loadStoragedData();
-  }, []);
+  }, [setLoading]);
 
   const signIn = useCallback(async ({ email, password }) => {
     const { data: response } = await api.post('sessions', { email, password });
@@ -69,7 +72,7 @@ const AuthProvider: React.FC = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ signIn, signOut, data }}>
+    <AuthContext.Provider value={{ signIn, signOut, data, loading }}>
       {children}
     </AuthContext.Provider>
   );
