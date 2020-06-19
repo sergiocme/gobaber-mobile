@@ -14,6 +14,7 @@ import { Form } from '@unform/mobile';
 import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
+import { useAuth } from '../../contexts/auth';
 import getValidationErrors from '../../utils/getValidationErrors';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
@@ -39,6 +40,8 @@ const SignIn: React.FC = () => {
   const passwordInputRef = useRef<TextInput>(null);
   const navigation = useNavigation();
 
+  const { signIn } = useAuth();
+
   const handleSignIn = useCallback(
     async ({ email, password }: SignInFormData) => {
       formRef.current?.setErrors({});
@@ -49,6 +52,11 @@ const SignIn: React.FC = () => {
         });
 
         await schema.validate({ email, password }, { abortEarly: false });
+
+        await signIn({
+          email,
+          password,
+        });
       } catch (error) {
         if (error instanceof Yup.ValidationError) {
           const errors = getValidationErrors(error);
@@ -58,7 +66,7 @@ const SignIn: React.FC = () => {
         }
       }
     },
-    [],
+    [signIn],
   );
 
   return (
