@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { useAuth } from '../../contexts/auth';
@@ -30,10 +31,18 @@ export interface Provider {
 const Dashboard: React.FC = () => {
   const [providers, setProviders] = useState<Provider[]>([]);
 
+  const { navigate } = useNavigation();
   const {
     signOut,
     data: { user },
   } = useAuth();
+
+  const navigateToCreateAppointment = useCallback(
+    (providerId: string) => {
+      navigate('CreateAppointment', { providerId });
+    },
+    [navigate],
+  );
 
   useEffect(() => {
     async function loadProviders(): Promise<void> {
@@ -65,7 +74,9 @@ const Dashboard: React.FC = () => {
           <ProvidersListTitle>Cabeleireiros</ProvidersListTitle>
         }
         renderItem={({ item }) => (
-          <ProviderContainer onPress={() => {}}>
+          <ProviderContainer
+            onPress={() => navigateToCreateAppointment(item.id)}
+          >
             <ProviderAvatar source={{ uri: item.avatar_url }} />
 
             <ProviderInfo>
