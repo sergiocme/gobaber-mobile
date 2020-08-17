@@ -8,9 +8,16 @@ import React, {
 import AsyncStorage from '@react-native-community/async-storage';
 import api from '../services/api';
 
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatar_url: string;
+}
+
 interface AuthState {
   token: string;
-  user: object;
+  user: User;
 }
 
 interface SignInParams {
@@ -44,8 +51,8 @@ const AuthProvider: React.FC = ({ children }) => {
   useEffect(() => {
     async function loadStoragedData(): Promise<void> {
       const [token, user] = await AsyncStorage.multiGet([
-        '@Gobaber:token',
-        '@Gobaber:user',
+        '@GoBaraber:token',
+        '@GoBarber:user',
       ]);
 
       if (token[1] && user[1]) {
@@ -61,14 +68,14 @@ const AuthProvider: React.FC = ({ children }) => {
     const { token, user } = response;
 
     await AsyncStorage.multiSet([
-      ['@Gobaber:token', token],
-      ['@Gobaber:user', JSON.stringify(user)],
+      ['@GoBarber:token', token],
+      ['@GoBarber:user', JSON.stringify(user)],
     ]);
     setData({ user, token });
   }, []);
 
   const signOut = useCallback(async () => {
-    await AsyncStorage.multiRemove(['@Gobaber:token', '@Gobaber:user']);
+    await AsyncStorage.multiRemove(['@GoBarber:token', '@GoBarber:user']);
     setData({} as AuthState);
   }, []);
 
