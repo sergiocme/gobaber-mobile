@@ -34,13 +34,17 @@ const CreateAppointment: React.FC = () => {
   } = useAuth();
   const { goBack } = useNavigation();
   const route = useRoute();
-
-  const [providers, setProviders] = useState<Provider[]>([]);
   const { providerId } = route.params as RouteParams;
+  const [providers, setProviders] = useState<Provider[]>([]);
+  const [selectedProvider, setSelectedProvider] = useState(providerId);
 
   const navigateBack = useCallback(() => {
     goBack();
   }, [goBack]);
+
+  const handleSelectProvider = useCallback((id: string) => {
+    setSelectedProvider(id);
+  }, []);
 
   useEffect(() => {
     async function loadProviders(): Promise<void> {
@@ -71,9 +75,14 @@ const CreateAppointment: React.FC = () => {
           data={providers}
           keyExtractor={provider => provider.id}
           renderItem={({ item }) => (
-            <ProviderContainer>
+            <ProviderContainer
+              onPress={() => handleSelectProvider(item.id)}
+              selected={item.id === selectedProvider}
+            >
               <ProviderAvatar source={{ uri: item.avatar_url }} />
-              <ProviderName>{item.name}</ProviderName>
+              <ProviderName selected={item.id === selectedProvider}>
+                {item.name}
+              </ProviderName>
             </ProviderContainer>
           )}
         />
