@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useRoute, useNavigation } from '@react-navigation/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import Icon from 'react-native-vector-icons/Feather';
 
 import { useAuth } from '../../contexts/auth';
@@ -16,6 +17,10 @@ import {
   ProviderContainer,
   ProviderAvatar,
   ProviderName,
+  Calendar,
+  Title,
+  OpenDatePickerButton,
+  OpenDatePickerButtonText,
 } from './styles';
 
 interface RouteParams {
@@ -37,6 +42,8 @@ const CreateAppointment: React.FC = () => {
   const { providerId } = route.params as RouteParams;
   const [providers, setProviders] = useState<Provider[]>([]);
   const [selectedProvider, setSelectedProvider] = useState(providerId);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   const navigateBack = useCallback(() => {
     goBack();
@@ -45,6 +52,18 @@ const CreateAppointment: React.FC = () => {
   const handleSelectProvider = useCallback((id: string) => {
     setSelectedProvider(id);
   }, []);
+
+  const handleOpenDatePicker = useCallback(() => {
+    setShowDatePicker(true);
+  }, []);
+
+  const handleDateChanged = useCallback(
+    (event: any, date: Date | undefined) => {
+      setShowDatePicker(false);
+      date ? setSelectedDate(date) : null;
+    },
+    [],
+  );
 
   useEffect(() => {
     async function loadProviders(): Promise<void> {
@@ -87,6 +106,23 @@ const CreateAppointment: React.FC = () => {
           )}
         />
       </ProvidersListContainer>
+
+      <Calendar>
+        <Title>Pick a Day</Title>
+
+        <OpenDatePickerButton onPress={handleOpenDatePicker}>
+          <OpenDatePickerButtonText>Change date</OpenDatePickerButtonText>
+        </OpenDatePickerButton>
+
+        {showDatePicker && (
+          <DateTimePicker
+            mode="date"
+            display="calendar"
+            onChange={handleDateChanged}
+            value={selectedDate}
+          />
+        )}
+      </Calendar>
     </Container>
   );
 };
