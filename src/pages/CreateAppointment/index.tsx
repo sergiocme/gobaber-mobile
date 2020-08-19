@@ -58,6 +58,7 @@ const CreateAppointment: React.FC = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [availability, setAvailability] = useState<Availability[]>([]);
+  const [selectedHour, setSelectedHour] = useState(0);
 
   const navigateBack = useCallback(() => {
     goBack();
@@ -78,6 +79,10 @@ const CreateAppointment: React.FC = () => {
     },
     [],
   );
+
+  const handleSelectedHour = useCallback((hour: number) => {
+    setSelectedHour(hour);
+  }, []);
 
   useEffect(() => {
     async function loadProviders(): Promise<void> {
@@ -186,9 +191,17 @@ const CreateAppointment: React.FC = () => {
 
             <SectionContent horizontal>
               {morningAvailability.map(
-                ({ formattedHour, availability: available }) => (
-                  <Hour key={formattedHour} available={available}>
-                    <HourText>{formattedHour}</HourText>
+                ({ formattedHour, availability: available, hour }) => (
+                  <Hour
+                    key={formattedHour}
+                    enabled={available}
+                    available={available}
+                    selected={selectedHour === hour && available}
+                    onPress={() => handleSelectedHour(hour)}
+                  >
+                    <HourText selected={selectedHour === hour && available}>
+                      {formattedHour}
+                    </HourText>
                   </Hour>
                 ),
               )}
@@ -200,9 +213,17 @@ const CreateAppointment: React.FC = () => {
 
             <SectionContent horizontal>
               {afternoonAvailability.map(
-                ({ formattedHour, availability: available }) => (
-                  <Hour key={formattedHour} available={available}>
-                    <HourText>{formattedHour}</HourText>
+                ({ formattedHour, availability: available, hour }) => (
+                  <Hour
+                    key={formattedHour}
+                    enabled={available}
+                    available={available}
+                    selected={selectedHour === hour && available}
+                    onPress={() => handleSelectedHour(hour)}
+                  >
+                    <HourText selected={selectedHour === hour && available}>
+                      {formattedHour}
+                    </HourText>
                   </Hour>
                 ),
               )}
