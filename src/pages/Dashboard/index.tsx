@@ -33,7 +33,6 @@ const Dashboard: React.FC = () => {
 
   const { navigate } = useNavigation();
   const {
-    signOut,
     data: { user },
   } = useAuth();
 
@@ -43,6 +42,10 @@ const Dashboard: React.FC = () => {
     },
     [navigate],
   );
+
+  const handleNavigateToProfile = useCallback(() => {
+    navigate('Profile');
+  }, [navigate]);
 
   useEffect(() => {
     async function loadProviders(): Promise<void> {
@@ -62,7 +65,7 @@ const Dashboard: React.FC = () => {
           <UserName>{user.name}</UserName>
         </HeaderTitle>
 
-        <ProfileButton onPress={signOut}>
+        <ProfileButton onPress={handleNavigateToProfile}>
           <UserAvatar source={{ uri: user.avatar_url }} />
         </ProfileButton>
       </Header>
