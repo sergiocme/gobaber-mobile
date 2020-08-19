@@ -39,6 +39,7 @@ const SignUp: React.FC = () => {
   const navigation = useNavigation();
   const {
     data: { user },
+    updateUser,
   } = useAuth();
   const formRef = useRef<FormHandles>(null);
   const emailInputRef = useRef<TextInput>(null);
@@ -81,26 +82,28 @@ const SignUp: React.FC = () => {
           { abortEarly: false },
         );
 
-        await api.post('/users', {
+        const { data } = await api.put('/profiles', {
           name,
           email,
           password: newPassword,
           old_password: oldPassword,
         });
 
-        Alert.alert('Registered successfully!', 'You already can SignIn.');
-
+        await updateUser(data);
         navigation.goBack();
       } catch (error) {
         if (error instanceof Yup.ValidationError) {
           const errors = getValidationErrors(error);
           formRef.current?.setErrors(errors);
         } else {
-          Alert.alert('Register Error', 'Unable to register, try again later');
+          Alert.alert(
+            'Update Error',
+            'Unable to update profile, try again later',
+          );
         }
       }
     },
-    [navigation],
+    [navigation, updateUser],
   );
 
   const handleGoBack = useCallback(() => {
@@ -133,13 +136,13 @@ const SignUp: React.FC = () => {
 
             <Form
               ref={formRef}
+              initialData={user}
               onSubmit={handleSignUp}
               style={{ width: '100%' }}
             >
               <Input
                 name="name"
                 icon="user"
-                defaultValue={user.name}
                 placeholder="Name"
                 autoCapitalize="words"
                 returnKeyType="next"
@@ -151,7 +154,6 @@ const SignUp: React.FC = () => {
                 ref={emailInputRef}
                 name="email"
                 icon="mail"
-                defaultValue={user.email}
                 placeholder="Email"
                 autoCorrect={false}
                 autoCapitalize="none"
