@@ -1,5 +1,5 @@
-import React from 'react';
-import { View } from 'react-native';
+import React, { useCallback } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 
 import {
@@ -11,6 +11,15 @@ import {
 } from './styles';
 
 const CreatedAppointment: React.FC = () => {
+  const { reset } = useNavigation();
+
+  const handleOkayButton = useCallback(() => {
+    reset({
+      routes: [{ name: 'Dashboard' }],
+      index: 0,
+    });
+  }, [reset]);
+
   return (
     <Container>
       <Icon name="check" size={128} color="#04d361" />
@@ -20,7 +29,7 @@ const CreatedAppointment: React.FC = () => {
         You now have a meet with your Barber at Setemper, 14 on 09:00
       </Description>
 
-      <OkayButton onPress={() => {}}>
+      <OkayButton onPress={handleOkayButton}>
         <OkayButtonText>Okay</OkayButtonText>
       </OkayButton>
     </Container>
