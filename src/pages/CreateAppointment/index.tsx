@@ -65,7 +65,7 @@ const CreateAppointment: React.FC = () => {
   }, []);
 
   const handleDateChanged = useCallback(
-    (event: any, date: Date | undefined) => {
+    (event: unknown, date: Date | undefined) => {
       setShowDatePicker(false);
       date ? setSelectedDate(date) : null;
     },
