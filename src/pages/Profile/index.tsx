@@ -7,6 +7,7 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
+import ImagePicker from 'react-native-image-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/mobile';
@@ -110,6 +111,33 @@ const SignUp: React.FC = () => {
     navigation.goBack();
   }, [navigation]);
 
+  const handleImagePicker = useCallback(() => {
+    ImagePicker.showImagePicker({ title: 'Select Avatar' }, (response) => {
+      if (response.didCancel) {
+        return;
+      }
+
+      if (response.error) {
+        Alert.alert(
+          'Something did wrong',
+          'Unable to update, make sure you granted permission',
+        );
+        return;
+      }
+      const data = new FormData();
+
+      data.append('avatar', {
+        type: 'image/jpeg',
+        name: `${user.id}.jpg`,
+        uri: response.uri,
+      });
+
+      api.patch('/users/avatar', data).then(({ data }) => {
+        updateUser(data);
+      });
+    });
+  }, [updateUser, user]);
+
   return (
     <>
       <KeyboardAvoidingView
@@ -126,7 +154,7 @@ const SignUp: React.FC = () => {
               <Icon name="chevron-left" size={24} color="#999591" />
             </BackButton>
 
-            <UserAvatarButton onPress={() => {}}>
+            <UserAvatarButton onPress={handleImagePicker}>
               <UserAvatar source={{ uri: user.avatar_url }} />
             </UserAvatarButton>
 
