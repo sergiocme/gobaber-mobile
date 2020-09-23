@@ -22,6 +22,8 @@ import {
   ProviderMetaText,
 } from './styles';
 
+import emptyAvatarImg from '../../assets/empty_profile.png';
+
 export interface Provider {
   id: string;
   name: string;
@@ -66,7 +68,13 @@ const Dashboard: React.FC = () => {
         </HeaderTitle>
 
         <ProfileButton onPress={handleNavigateToProfile}>
-          <UserAvatar source={{ uri: user.avatar_url }} />
+          {
+            user.avatar_url ? (
+              <UserAvatar source={{ uri: user.avatar_url }} />
+            ) : (
+              <UserAvatar source={emptyAvatarImg} />
+            )
+          }
         </ProfileButton>
       </Header>
 
