@@ -28,6 +28,8 @@ import {
   UserAvatar,
 } from './styles';
 
+import emptyAvatarImg from '../../assets/empty_profile.png';
+
 interface SignUpFormData {
   name: string;
   email: string;
@@ -155,7 +157,13 @@ const SignUp: React.FC = () => {
             </BackButton>
 
             <UserAvatarButton onPress={handleImagePicker}>
-              <UserAvatar source={{ uri: user.avatar_url }} />
+            {
+              user.avatar_url ? (
+                <UserAvatar source={{ uri: user.avatar_url }} />
+              ) : (
+                <UserAvatar source={emptyAvatarImg} />
+              )
+            }
             </UserAvatarButton>
 
             <View>
