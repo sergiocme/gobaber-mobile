@@ -34,6 +34,8 @@ import {
   CreateAppointmentButtonText,
 } from './styles';
 
+import emptyAvatarImg from '../../assets/empty_profile.png';
+
 interface RouteParams {
   providerId: string;
 }
@@ -166,7 +168,13 @@ const CreateAppointment: React.FC = () => {
 
         <HeaderTitle>Barbers</HeaderTitle>
 
-        <UserAvatar source={{ uri: user.avatar_url }} />
+        {
+          user.avatar_url ? (
+            <UserAvatar source={{ uri: user.avatar_url }} />
+          ) : (
+            <UserAvatar source={emptyAvatarImg} />
+          )
+        }
       </Header>
 
       <Content alwaysBounceVertical>
@@ -181,7 +189,13 @@ const CreateAppointment: React.FC = () => {
                 onPress={() => handleSelectProvider(item.id)}
                 selected={item.id === selectedProvider}
               >
-                <ProviderAvatar source={{ uri: item.avatar_url }} />
+                {
+                  item.avatar_url ? (
+                    <ProviderAvatar source={{ uri: item.avatar_url }} />
+                  ) : (
+                    <ProviderAvatar source={emptyAvatarImg} />
+                  )
+                }
                 <ProviderName selected={item.id === selectedProvider}>
                   {item.name}
                 </ProviderName>
