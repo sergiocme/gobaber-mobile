@@ -2,9 +2,9 @@
 
 GoBarber Mobile is a beautiful interface for you to schedule services.
 
-<div style="display: flex;">
-  <img style="width: 280px;" src="https://github.com/sergiocme/gobarber-mobile/blob/master/Screenshot1.png" />
-  <img style="width: 280px;" src="https://github.com/sergiocme/gobarber-mobile/blob/master/Screenshot2.png" />
+<div>
+  <img height="720px" src="https://github.com/sergiocme/gobarber-mobile/blob/master/Screenshot1.png" />
+  <img height="720px" src="https://github.com/sergiocme/gobarber-mobile/blob/master/Screenshot2.png" />
 </div>
 
 # Environment Setup
